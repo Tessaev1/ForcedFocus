@@ -13,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
+    // AccessToken.getCurrentAccessToken().getDeclinedPermissions();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

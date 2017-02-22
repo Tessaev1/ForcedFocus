@@ -10,8 +10,11 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
@@ -29,13 +32,16 @@ public class LoginActivity extends AppCompatActivity {
 
         this.userInfo = (TextView) findViewById(R.id.userInfo);
         this.loginButton = (LoginButton) findViewById(R.id.login_button);
-        this.loginButton.setReadPermissions("email");
+//        this.loginButton.setReadPermissions(Arrays.asList("user_status"));
 
         // Callback registration
         this.loginButton.registerCallback(this.callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
+
+                LoginManager.getInstance().logInWithPublishPermissions(
+                        LoginActivity.this, Arrays.asList("publish_actions"));
 
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
