@@ -6,12 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
+import com.facebook.*;
+import com.facebook.login.*;
 import com.facebook.login.widget.LoginButton;
 
 import java.util.Arrays;
@@ -19,7 +15,6 @@ import java.util.Arrays;
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private LoginButton loginButton;
-    private TextView userInfo;
 
     public static final String TAG = "LoginActivity";
 
@@ -30,9 +25,8 @@ public class LoginActivity extends AppCompatActivity {
 
         this.callbackManager = CallbackManager.Factory.create();
 
-        this.userInfo = (TextView) findViewById(R.id.userInfo);
+        final TextView loginError = (TextView) findViewById(R.id.loginError);
         this.loginButton = (LoginButton) findViewById(R.id.login_button);
-//        this.loginButton.setReadPermissions(Arrays.asList("user_status"));
 
         // Callback registration
         this.loginButton.registerCallback(this.callbackManager, new FacebookCallback<LoginResult>() {
@@ -49,12 +43,12 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                LoginActivity.this.userInfo.setText("Login attempt canceled.");
+                loginError.setText("Login attempt canceled.");
             }
 
             @Override
             public void onError(FacebookException exception) {
-                LoginActivity.this.userInfo.setText("Login attempt failed.");
+                loginError.setText("Login attempt failed.");
             }
         });
     }
