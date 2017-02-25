@@ -2,7 +2,6 @@ package edu.uw.tessa.forcedfocus;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.*;
@@ -11,8 +10,6 @@ import android.view.*;
 import android.widget.*;
 import com.facebook.AccessToken;
 import java.util.concurrent.TimeUnit;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private AccessToken userToken = AccessToken.getCurrentAccessToken();
@@ -23,15 +20,9 @@ public class MainActivity extends AppCompatActivity {
     Button btnStart;
     CountDownTimer countDownTimer;
     int milisUntilDone = 0;
+    int startTime;
 
     public static final String TAG = "MainActivity";
-
-    public int index = 0;
-
-    public String[] insults = {
-      "You failed", "Failure", "Loser", "LOSER!!", "Mwahahaha!"
-    };
-    public Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (edtSetTimer.getText().toString().trim().length() != 0) {
-                    int startTime = Integer.parseInt(edtSetTimer.getText().toString()) * 60000;
+                    startTime = Integer.parseInt(edtSetTimer.getText().toString()) * 60000;
                     Log.i("startTime", startTime + btnStart.getText().toString());
                     if (v == btnStart && startTime > 0) {
                         if (btnStart.getText().toString().equalsIgnoreCase("START")) {
@@ -91,24 +82,10 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-        //sendBadToasts();
-        //sendBadText();
     }
 
     public boolean isLoggedIn() {
         return this.userToken != null;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_bar, menu);
-        return true;
-    }
-
-    public void getPreferences(MenuItem item) {
-        Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
-        startActivity(intent);
     }
 
     class MyCountDownTimer extends CountDownTimer {
@@ -139,66 +116,32 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         Log.i(TAG, "onStop has been called");
         if (milisUntilDone != 0) {
-            Toast toast = Toast.makeText(getApplicationContext(), "You failed", Toast.LENGTH_SHORT);
-            toast.show();
+            double timeAtStop = startTime - milisUntilDone;
+            double timeRatio = (timeAtStop / ((double) startTime));
+
+            if (timeRatio * 100 < 25) {
+                SendSMS sendSMS = new SendSMS(MainActivity.this);
+                sendSMS.sendBadText();
+            } else {
+                ToastSpam toastSpam = new ToastSpam(MainActivity.this, MainActivity.this);
+                toastSpam.sendBadToasts();
+            }
+
             countDownTimer.cancel();
             countDownTimer.onFinish();
         }
         super.onStop();
     }
 
-    // Sends mean toasts every 2 seconds for one minute.
-    public void sendBadToasts() {
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        index++;
-                        final Toast toast = Toast.makeText(
-                                getApplicationContext(),  insults[index % insults.length],
-                                Toast.LENGTH_SHORT);
-                        toast.show();
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                toast.cancel();
-                            }
-
-                        }, 2000);
-
-                    }
-                });
-            }
-        }, 0, 1000);
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                timer.cancel();
-            }
-        }, 60000);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar, menu);
+        return true;
     }
 
-
-    // Sends this text message to a specific phoneNumber
-    // get Conacts is to be added soon.
-    public void sendBadText() {
-        String phoneNumber = "3605846299";
-        String message = "I suck at Focusing... ";
-
-        //SmsManager sms = SmsManager.getDefault();
-        //sms.sendTextMessage(phoneNumber, null, message, null, null);
-
-        Toast.makeText(getApplicationContext(),  phoneNumber + ": " + message,
-                Toast.LENGTH_SHORT).show();
+    public void getPreferences(MenuItem item) {
+        Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
+        startActivity(intent);
     }
 }
