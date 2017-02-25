@@ -2,6 +2,7 @@ package edu.uw.tessa.forcedfocus;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.*;
@@ -10,6 +11,8 @@ import android.view.*;
 import android.widget.*;
 import com.facebook.AccessToken;
 import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private AccessToken userToken = AccessToken.getCurrentAccessToken();
@@ -19,15 +22,21 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTimeUp;
     Button btnStart;
     CountDownTimer countDownTimer;
-    int MilisUntilDone = 0;
+    int milisUntilDone = 0;
 
     public static final String TAG = "MainActivity";
+
+    public int index = 0;
+
+    public String[] insults = {
+      "You failed", "Failure", "Loser", "LOSER!!", "Mwahahaha!"
+    };
+    public Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if (!this.isLoggedIn()) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -82,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+        //sendBadToasts();
+        //sendBadText();
     }
 
     public boolean isLoggedIn() {
@@ -100,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-
     class MyCountDownTimer extends CountDownTimer {
 
         public MyCountDownTimer(long millisInFuture, long countDownInterval) {
@@ -116,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 tvMilliSecond.setText(String.valueOf(seconds % 60));
             }
-            MilisUntilDone = (int) millisUntilFinished;
+            milisUntilDone = (int) millisUntilFinished;
             tvSecond.setText(String.valueOf(minutes));
         }
         @Override
@@ -128,13 +137,68 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        Log.v(TAG, "onStop has been called");
-        if (MilisUntilDone != 0) {
+        Log.i(TAG, "onStop has been called");
+        if (milisUntilDone != 0) {
             Toast toast = Toast.makeText(getApplicationContext(), "You failed", Toast.LENGTH_SHORT);
             toast.show();
             countDownTimer.cancel();
             countDownTimer.onFinish();
         }
         super.onStop();
+    }
+
+    // Sends mean toasts every 2 seconds for one minute.
+    public void sendBadToasts() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        index++;
+                        final Toast toast = Toast.makeText(
+                                getApplicationContext(),  insults[index % insults.length],
+                                Toast.LENGTH_SHORT);
+                        toast.show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+
+                        }, 2000);
+
+                    }
+                });
+            }
+        }, 0, 1000);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                timer.cancel();
+            }
+        }, 60000);
+    }
+
+
+    // Sends this text message to a specific phoneNumber
+    // get Conacts is to be added soon.
+    public void sendBadText() {
+        String phoneNumber = "3605846299";
+        String message = "I suck at Focusing... ";
+
+        //SmsManager sms = SmsManager.getDefault();
+        //sms.sendTextMessage(phoneNumber, null, message, null, null);
+
+        Toast.makeText(getApplicationContext(),  phoneNumber + ": " + message,
+                Toast.LENGTH_SHORT).show();
     }
 }
