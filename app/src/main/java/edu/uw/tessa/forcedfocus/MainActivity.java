@@ -15,12 +15,16 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 
 import org.w3c.dom.Text;
+
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private AccessToken userToken = AccessToken.getCurrentAccessToken();
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTimeUp;
     Button btnStart;
     CountDownTimer countDownTimer;
+    int MilisUntilDone = 0;
 
     public static final String TAG = "MainActivity";
 
@@ -55,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (edtSetTimer.getText().toString().trim().length() != 0) {
-                    int startTime = Integer.parseInt(edtSetTimer.getText().toString()) * 1000;
+                    int startTime = Integer.parseInt(edtSetTimer.getText().toString()) * 60000;
                     Log.i("startTime", startTime + btnStart.getText().toString());
                     if (v == btnStart && startTime > 0) {
                         if (btnStart.getText().toString().equalsIgnoreCase("START")) {
                             Log.i("startTime Start", btnStart.getText().toString());
                             countDownTimer = new MyCountDownTimer(startTime, 10);
-                            btnStart.setText("STOP");
+                            btnStart.setVisibility(View.INVISIBLE);
                             tvTimeUp.setVisibility(View.INVISIBLE);
                             edtSetTimer.setEnabled(false);
                             countDownTimer.start();
@@ -121,16 +126,32 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         public void onTick(long millisUntilFinished) {
-            long milliSecond = millisUntilFinished % 1000;
-            tvMilliSecond.setText(String.valueOf(milliSecond / 100));
-            long second = millisUntilFinished / 1000;
-            tvSecond.setText(String.valueOf(second));
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+            if (seconds % 60 < 10) {
+                tvMilliSecond.setText("0" + String.valueOf(seconds % 60));
+            } else {
+                tvMilliSecond.setText(String.valueOf(seconds % 60));
+            }
+            MilisUntilDone = (int) millisUntilFinished;
+            tvSecond.setText(String.valueOf(minutes));
         }
         @Override
         public void onFinish() {
-            btnStart.setText("START");
+            btnStart.setVisibility(View.VISIBLE);
             edtSetTimer.setEnabled(true);
-            tvTimeUp.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onStop() {
+        Log.v(TAG, "onStop has been called");
+        if (MilisUntilDone != 0) {
+            Toast toast = Toast.makeText(getApplicationContext(), "You failed", Toast.LENGTH_SHORT);
+            toast.show();
+            countDownTimer.cancel();
+            countDownTimer.onFinish();
+        }
+        super.onStop();
     }
 }

@@ -47,7 +47,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="seconds"
+            android:text="minutes"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -82,7 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:textSize="60sp"/>
+            android:textSize="60sp"
+            android:text=":"/>
 
         <TextView
             android:id="@+id/tvMilliSecond"
@@ -100,7 +101,7 @@
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:textSize="30sp"
-        android:text="timeUP"
+        android:text="You finished this round!"
         android:visibility="invisible"/>
 
     <Button
