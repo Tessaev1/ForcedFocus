@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final TextView loginError = (TextView) findViewById(R.id.loginError);
         this.loginButton = (LoginButton) findViewById(R.id.login_button);
+        this.loginButton.setPublishPermissions(Arrays.asList("publish_actions"));
 
         // Callback registration
         this.loginButton.registerCallback(this.callbackManager, new FacebookCallback<LoginResult>() {
