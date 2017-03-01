@@ -1,6 +1,8 @@
 package edu.uw.tessa.forcedfocus;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTimeUp;
     Button btnStart;
     CountDownTimer countDownTimer;
+    SendSMS sendSMS;
     int milisUntilDone = 0;
     int startTime;
 
@@ -28,11 +31,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (!this.isLoggedIn()) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
 
+        sendSMS = new SendSMS(MainActivity.this, MainActivity.this);
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
         tvMilliSecond = (TextView) findViewById(R.id.tvMilliSecond);
@@ -120,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
             double timeRatio = (timeAtStop / ((double) startTime));
 
             if (timeRatio * 100 < 25) {
-                SendSMS sendSMS = new SendSMS(MainActivity.this);
                 sendSMS.sendBadText();
             } else {
                 ToastSpam toastSpam = new ToastSpam(MainActivity.this, MainActivity.this);
@@ -143,5 +147,13 @@ public class MainActivity extends AppCompatActivity {
     public void getPreferences(MenuItem item) {
         Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
         startActivity(intent);
+    }
+
+    public void maxVolume() {
+        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+        Toast.makeText(this, Integer.toString(streamMaxVolume), Toast.LENGTH_LONG).show();
+        audioManager.setStreamVolume(AudioManager.STREAM_RING, streamMaxVolume,
+                AudioManager.FLAG_ALLOW_RINGER_MODES|AudioManager.FLAG_PLAY_SOUND);
     }
 }
