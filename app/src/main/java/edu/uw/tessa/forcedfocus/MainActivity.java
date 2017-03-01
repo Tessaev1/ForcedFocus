@@ -148,12 +148,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
         startActivity(intent);
     }
-
-    public void maxVolume() {
-        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-        Toast.makeText(this, Integer.toString(streamMaxVolume), Toast.LENGTH_LONG).show();
-        audioManager.setStreamVolume(AudioManager.STREAM_RING, streamMaxVolume,
-                AudioManager.FLAG_ALLOW_RINGER_MODES|AudioManager.FLAG_PLAY_SOUND);
-    }
 }
