@@ -1,7 +1,9 @@
 package edu.uw.tessa.forcedfocus;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.*;
@@ -9,10 +11,14 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.facebook.AccessToken;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private AccessToken userToken = AccessToken.getCurrentAccessToken();
+    private ProfileTracker profileTracker;
     EditText edtSetTimer;
     TextView tvSecond;
     TextView tvMilliSecond;
@@ -32,6 +38,14 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+
+        this.profileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+                updateUI();
+            }
+        };
+        this.profileTracker.startTracking();
 
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
@@ -65,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
         
         edtSetTimer.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -78,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
                     tvSecond.setText("0");
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
@@ -93,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         public MyCountDownTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
+
         @Override
         public void onTick(long millisUntilFinished) {
             long minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
@@ -105,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             milisUntilDone = (int) millisUntilFinished;
             tvSecond.setText(String.valueOf(minutes));
         }
+
         @Override
         public void onFinish() {
             btnStart.setVisibility(View.VISIBLE);
@@ -114,14 +130,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
+        super.onStop();
         Log.i(TAG, "onStop has been called");
         if (milisUntilDone != 0) {
             double timeAtStop = startTime - milisUntilDone;
             double timeRatio = (timeAtStop / ((double) startTime));
+            Log.i(TAG, "time ratio: " + timeRatio *100);
 
-            if (timeRatio * 100 < 25) {
+            if (timeRatio * 100 < 20) {
                 SendSMS sendSMS = new SendSMS(MainActivity.this);
                 sendSMS.sendBadText();
+            } else if (timeRatio * 100 < 40) {
+                DialogFragment dialog = new FBPostFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.add(dialog, "FBPostFragment");
+                ft.commitAllowingStateLoss();
             } else {
                 ToastSpam toastSpam = new ToastSpam(MainActivity.this, MainActivity.this);
                 toastSpam.sendBadToasts();
@@ -130,7 +153,19 @@ public class MainActivity extends AppCompatActivity {
             countDownTimer.cancel();
             countDownTimer.onFinish();
         }
-        super.onStop();
+    }
+
+    private void updateUI() {
+        boolean enableButtons = this.userToken != null;
+
+        Profile profile = Profile.getCurrentProfile();
+        if (profile == null) {
+            Log.e("Profile", "null");
+        }
+        if (enableButtons && profile != null) {
+            Log.e("Access Token", AccessToken.getCurrentAccessToken().toString());
+            Log.e("TabSocial", profile.getName());
+        }
     }
 
     @Override
