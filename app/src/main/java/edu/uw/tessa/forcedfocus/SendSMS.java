@@ -10,13 +10,10 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
-import android.telephony.SmsManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import static android.media.CamcorderProfile.get;
 
 /**
  * Created by Tessa on 2/25/17.
@@ -27,6 +24,7 @@ public class SendSMS {
     private Activity activity;
     private Random r;
     private String[] embarrassingMessages;
+
 
     public SendSMS(Context context, Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -39,22 +37,23 @@ public class SendSMS {
         embarrassingMessages = new String[] {
                 "I really such at focusing on my work!!! LOL :D",
                 "I'm pregnant!!! :O",
-                "F*** you!!"
-        };
+                "F*** you!!",
+                "I suck at focusing... "
+            };
     }
 
     // Sends this text message to a specific phoneNumber
     public void sendBadText() {
-        String message = "I suck at focusing... ";
+        String message = embarrassingMessages[r.nextInt(embarrassingMessages.length)];
         List<String> numbers = getNumbers();
         String phoneNumber = numbers.get(r.nextInt(numbers.size()));
 
         Toast.makeText(this.context, phoneNumber + ": " + message,
                 Toast.LENGTH_SHORT).show();
-//
-//        SmsManager sms = SmsManager.getDefault();
-//        sms.sendTextMessage(phoneNumber, null,
-//               embarrassingMessages[r.nextInt(embarrassingMessages.length)] , null, null);
+
+        //SmsManager sms = SmsManager.getDefault();
+        //sms.sendTextMessage(phoneNumber, null,
+        //        message, null, null);
     }
 
     // Gets the phone contacts
@@ -67,9 +66,10 @@ public class SendSMS {
         if (size > 0) {
             Log.i("contacts", "Have at least one contact");
             while (cur.moveToNext()) {
-                name = cur
-                        .getString(cur
-                                .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                id = cur.getString(
+                        cur.getColumnIndex(ContactsContract.Contacts._ID));
+                name = cur.getString(
+                        cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 Log.i("contacts", "name: " + name);
                 if (Integer.parseInt(cur.getString(
                         cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {

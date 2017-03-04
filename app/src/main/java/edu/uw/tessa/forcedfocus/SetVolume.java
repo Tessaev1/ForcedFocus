@@ -23,38 +23,28 @@ public class SetVolume {
     private Context context;
     private Activity activity;
     private Random r;
-    private boolean setMax;
 
     public SetVolume(Context context, Activity activity) {
         r = new Random();
         this.context = context;
         this.activity = activity;
-        setMax = true;
     }
 
     public void setMaxVolume() {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int streamVolume = 0;
-        if (setMax) {
-            streamVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-        }
+        int streamVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
         audioManager.setStreamVolume(AudioManager.STREAM_RING, streamVolume,
                 AudioManager.FLAG_ALLOW_RINGER_MODES|AudioManager.FLAG_PLAY_SOUND);
-        setMax = !setMax;
 
         List<Uri> ringtoneList = listRingtones();
 
-        Log.i("setvolume", "ringtone list size:" + ringtoneList.size());
-
-        try {
-            RingtoneManager.setActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE,
-                    ringtoneList.get(r.nextInt(ringtoneList.size())));
-        } catch (Throwable t) {
-
+        int ringtoneIndex = 14;
+        if (ringtoneList.size() <= ringtoneIndex) {
+            ringtoneIndex = r.nextInt(ringtoneList.size());
         }
 
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(),
+                ringtoneList.get(ringtoneIndex));
         r.play();
     }
 

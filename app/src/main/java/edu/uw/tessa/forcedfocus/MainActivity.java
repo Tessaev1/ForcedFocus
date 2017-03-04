@@ -3,7 +3,6 @@ package edu.uw.tessa.forcedfocus;
 import android.Manifest;
 import android.content.Intent;
 import android.os.CountDownTimer;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.*;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // Might need this line for SMS to work on your phones.
         //ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
-        sendSMS = new SendSMS(MainActivity.this, MainActivity.this);
+        sendSMS.sendBadText();
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
         tvMilliSecond = (TextView) findViewById(R.id.tvMilliSecond);
