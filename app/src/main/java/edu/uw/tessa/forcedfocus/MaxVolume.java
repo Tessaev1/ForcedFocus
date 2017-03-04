@@ -3,13 +3,8 @@ package edu.uw.tessa.forcedfocus;
 import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
-import android.os.Handler;
 import android.widget.Toast;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by catherinejohnson on 2/28/17.

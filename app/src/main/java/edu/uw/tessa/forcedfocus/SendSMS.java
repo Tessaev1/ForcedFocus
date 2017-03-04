@@ -10,6 +10,7 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
+import android.telephony.SmsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class SendSMS {
     private Context context;
     private Activity activity;
     private Random r;
+    private String[] embarrassingMessages;
 
     public SendSMS(Context context, Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -34,6 +36,11 @@ public class SendSMS {
         r = new Random();
         this.context = context;
         this.activity = activity;
+        embarrassingMessages = new String[] {
+                "I really such at focusing on my work!!! LOL :D",
+                "I'm pregnant!!! :O",
+                "F*** you!!"
+        };
     }
 
     // Sends this text message to a specific phoneNumber
@@ -44,6 +51,10 @@ public class SendSMS {
 
         Toast.makeText(this.context, phoneNumber + ": " + message,
                 Toast.LENGTH_SHORT).show();
+//
+//        SmsManager sms = SmsManager.getDefault();
+//        sms.sendTextMessage(phoneNumber, null,
+//               embarrassingMessages[r.nextInt(embarrassingMessages.length)] , null, null);
     }
 
     // Gets the phone contacts
