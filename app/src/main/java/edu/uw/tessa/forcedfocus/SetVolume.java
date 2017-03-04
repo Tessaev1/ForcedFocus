@@ -3,27 +3,30 @@ package edu.uw.tessa.forcedfocus;
 import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
-import android.widget.Toast;
-
 
 /**
- * Created by catherinejohnson on 2/28/17.
+ * Created by catherinejohnson on 3/4/17.
  */
 
-public class MaxVolume {
+public class SetVolume {
     private Context context;
     private Activity activity;
+    private boolean setMax;
 
-    public MaxVolume(Context context, Activity activity) {
+    public SetVolume(Context context, Activity activity) {
         this.context = context;
         this.activity = activity;
+        setMax = true;
     }
 
     public void setMaxVolume() {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-        Toast.makeText(context, Integer.toString(streamMaxVolume), Toast.LENGTH_LONG).show();
-        audioManager.setStreamVolume(AudioManager.STREAM_RING, streamMaxVolume,
+        int streamVolume = 0;
+        if (setMax) {
+            streamVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+        }
+        audioManager.setStreamVolume(AudioManager.STREAM_RING, streamVolume,
                 AudioManager.FLAG_ALLOW_RINGER_MODES|AudioManager.FLAG_PLAY_SOUND);
+        setMax = !setMax;
     }
 }
