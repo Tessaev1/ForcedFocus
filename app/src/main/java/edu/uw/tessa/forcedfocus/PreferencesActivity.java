@@ -26,8 +26,9 @@ public class PreferencesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 LoginManager.getInstance().logOut();
-                Intent intent = new Intent(PreferencesActivity.this, LoginActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(PreferencesActivity.this, LoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
             }
         });
     }
