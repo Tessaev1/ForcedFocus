@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     CountDownTimer countDownTimer;
     int milisUntilDone = 0;
     int startTime;
+    boolean timerIsTicking;
 
     public static final String TAG = "MainActivity";
 
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     if (v == btnStart && startTime > 0) {
                         if (btnStart.getText().toString().equalsIgnoreCase("START")) {
                             Log.i("startTime Start", btnStart.getText().toString());
+                            timerIsTicking = true;
                             countDownTimer = new MyCountDownTimer(startTime, 10);
                             btnStart.setVisibility(View.INVISIBLE);
                             tvTimeUp.setVisibility(View.INVISIBLE);
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         Log.i(TAG, "onStop has been called");
-        if (milisUntilDone != 0) {
+        if (milisUntilDone != 0 && timerIsTicking) {
             double timeAtStop = startTime - milisUntilDone;
             double timeRatio = (timeAtStop / ((double) startTime));
             Log.i(TAG, "time ratio: " + timeRatio *100);
@@ -151,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             countDownTimer.cancel();
+            timerIsTicking = false;
             countDownTimer.onFinish();
         }
     }
