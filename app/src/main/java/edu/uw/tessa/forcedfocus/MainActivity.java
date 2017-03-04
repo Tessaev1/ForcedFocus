@@ -1,7 +1,9 @@
 package edu.uw.tessa.forcedfocus;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.*;
@@ -11,7 +13,7 @@ import android.widget.*;
 import com.facebook.AccessToken;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private AccessToken userToken = AccessToken.getCurrentAccessToken();
     EditText edtSetTimer;
     TextView tvSecond;
@@ -21,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
     CountDownTimer countDownTimer;
     int milisUntilDone = 0;
     int startTime;
+
+    private static final int PROGRESS = 0x1;
+    private ProgressBar mProgress;
+    private int mProgressStatus = 0;
+
+    private Handler mHandler = new Handler();
 
     public static final String TAG = "MainActivity";
 
@@ -33,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+        mProgress = (ProgressBar) findViewById(R.id.progress_bar);
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
         tvMilliSecond = (TextView) findViewById(R.id.tvMilliSecond);

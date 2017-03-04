@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ffdark" parent="android:Theme.Material" >
+        <item name="android:colorPrimary">@color/cardview_dark_background</item>
+        <item name="android:colorPrimaryDark">@color/cardview_dark_background</item>
+        <item name="android:colorAccent">@color/ff_dark_red</item>
+        <item name="android:textColorPrimaryInverse">@color/ff_text_light</item>
+        <item name="android:textColorSecondary">@color/secondary_text_material_light</item>
+        <item name="android:textColorPrimary">@color/primary_text_material_light</item>
+        <item name="android:colorBackground">@android:color/background_dark</item>
+        <item name="android:navigationBarColor">@color/ff_dark_red</item>
+    </style>
+
+    <style name="ffdark2" parent="android:Theme.Material">
+        <item name="colorAccent">@color/ff_dark_red</item>
+        <item name="android:colorBackground">@android:color/background_dark</item>
+        <item name="android:colorAccent">@color/ff_dark_red</item>
+        <item name="android:colorPrimary">@color/primary_material_dark</item>
+    </style>
+</resources>

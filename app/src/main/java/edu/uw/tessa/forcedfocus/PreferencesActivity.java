@@ -1,5 +1,6 @@
 package edu.uw.tessa.forcedfocus;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 
-public class PreferencesActivity extends AppCompatActivity {
+public class PreferencesActivity extends Activity {
     private AccessToken userToken = AccessToken.getCurrentAccessToken();
     public static final String TAG = "PreferencesActivity";
 

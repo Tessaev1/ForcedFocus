@@ -1,5 +1,6 @@
 package edu.uw.tessa.forcedfocus;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import com.facebook.login.widget.LoginButton;
 
 import java.util.Arrays;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
     private CallbackManager callbackManager;
     private LoginButton loginButton;
 

@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ffdark2" parent="android:Theme.Black" >
+        <item name="colorAccent">@color/ff_dark_red</item>
+        <item name="android:colorBackground">@android:color/background_dark</item>
+    </style>
+
+    <style name="ffdark2.Button" parent="Theme.AppCompat.NoActionBar" >
+        <item name="colorAccent">@color/ff_dark_red</item>
+    </style>
+
 </resources>
