@@ -43,9 +43,9 @@ public class SetVolume {
             ringtoneIndex = r.nextInt(ringtoneList.size());
         }
 
-        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(),
+        Ringtone ring = RingtoneManager.getRingtone(getApplicationContext(),
                 ringtoneList.get(ringtoneIndex));
-        r.play();
+        ring.play();
     }
 
     public List<Uri> listRingtones() {

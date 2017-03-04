@@ -10,6 +10,7 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
+import android.telephony.SmsManager;
 
 import java.util.ArrayList;
 import java.util.List;
