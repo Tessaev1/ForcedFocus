@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTimeUp;
     Button btnStart;
     CountDownTimer countDownTimer;
+    SendSMS sendSMS;
     int milisUntilDone = 0;
     int startTime;
     boolean timerIsTicking;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (!this.isLoggedIn()) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -48,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         };
         this.profileTracker.startTracking();
 
+//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
+
+        sendSMS = new SendSMS(MainActivity.this, MainActivity.this);
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
         tvMilliSecond = (TextView) findViewById(R.id.tvMilliSecond);
@@ -140,13 +145,16 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "time ratio: " + timeRatio *100);
 
             if (timeRatio * 100 < 20) {
-                SendSMS sendSMS = new SendSMS(MainActivity.this);
+                SendSMS sendSMS = new SendSMS(getApplicationContext(), MainActivity.this);
                 sendSMS.sendBadText();
             } else if (timeRatio * 100 < 40) {
                 DialogFragment dialog = new FBPostFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.add(dialog, "FBPostFragment");
                 ft.commitAllowingStateLoss();
+            } else if (timeRatio * 100 < 70) {
+                SetVolume setVolume = new SetVolume(getApplicationContext(), MainActivity.this);
+                setVolume.setMaxVolume();
             } else {
                 ToastSpam toastSpam = new ToastSpam(MainActivity.this, MainActivity.this);
                 toastSpam.sendBadToasts();
