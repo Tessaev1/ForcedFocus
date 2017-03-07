@@ -13,7 +13,7 @@ public class Splash extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SystemClock.sleep(TimeUnit.SECONDS.toMillis(1));
+        SystemClock.sleep(TimeUnit.SECONDS.toMillis(3));
 
         Intent i = new Intent(Splash.this,
                 MainActivity.class);
