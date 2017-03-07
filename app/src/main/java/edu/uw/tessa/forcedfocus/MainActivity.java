@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvSecond;
     TextView tvMilliSecond;
     TextView tvTimeUp;
+    TextView tvSeparator;
     Button btnStart;
     CountDownTimer countDownTimer;
     SendSMS sendSMS;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
         tvMilliSecond = (TextView) findViewById(R.id.tvMilliSecond);
+        tvSeparator = (TextView) findViewById(R.id.tvSeparator);
         tvTimeUp = (TextView) findViewById(R.id.tvTimeUp);
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                             countDownTimer = new MyCountDownTimer(startTime, 10);
                             btnStart.setVisibility(View.INVISIBLE);
                             tvTimeUp.setVisibility(View.INVISIBLE);
+                            tvSeparator.setVisibility(View.VISIBLE);
                             edtSetTimer.setEnabled(false);
                             countDownTimer.start();
                         } else {
@@ -100,10 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String sec = edtSetTimer.getText().toString();
                 if (sec != null && sec != "" && sec.length() > 0) {
-                    tvSecond.setText(edtSetTimer.getText());
-                    tvMilliSecond.setText("0");
                     tvTimeUp.setVisibility(View.INVISIBLE);
-                    tvSecond.setText("0");
                 }
             }
 
