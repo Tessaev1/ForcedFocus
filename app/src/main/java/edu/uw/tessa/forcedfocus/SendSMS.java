@@ -68,33 +68,37 @@ public class SendSMS {
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         String id = null, name = null, phone = null;
         int size = cur.getCount();
-        if (size > 0) {
-            Log.i("contacts", "Have at least one contact");
-            while (cur.moveToNext()) {
-                id = cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts._ID));
-                name = cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                Log.i("contacts", "name: " + name);
-                if (Integer.parseInt(cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    Log.i("contacts", "phone: " + phone);
-                    Cursor pCur = cr.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
-                            new String[]{id}, null);
-                    while (pCur.moveToNext()) {
-                        phone = pCur
-                                .getString(pCur
-                                        .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        try {
+            if (size > 0) {
+                Log.i("contacts", "Have at least one contact");
+                while (cur.moveToNext()) {
+                    id = cur.getString(
+                            cur.getColumnIndex(ContactsContract.Contacts._ID));
+                    name = cur.getString(
+                            cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    Log.i("contacts", "name: " + name);
+                    if (Integer.parseInt(cur.getString(
+                            cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                         Log.i("contacts", "phone: " + phone);
-                        break;
+                        Cursor pCur = cr.query(
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
+                                new String[]{id}, null);
+                        while (pCur.moveToNext()) {
+                            phone = pCur
+                                    .getString(pCur
+                                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            Log.i("contacts", "phone: " + phone);
+                            break;
+                        }
+                        numbers.add(phone);
+                        pCur.close();
                     }
-                    numbers.add(phone);
-                    pCur.close();
                 }
             }
+        } catch(Exception ex) {
+            Log.e("SendSMS", "exception: " + ex);
         }
         return numbers;
     }

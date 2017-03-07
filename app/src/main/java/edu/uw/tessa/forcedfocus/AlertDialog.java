@@ -3,6 +3,7 @@ package edu.uw.tessa.forcedfocus;
 import android.app.*;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 
 public class AlertDialog extends DialogFragment {
@@ -15,6 +16,7 @@ public class AlertDialog extends DialogFragment {
 
     public static AlertDialog newInstance(String message) {
         AlertDialog fragment = new AlertDialog();
+        Log.i(TAG, "dialog created");
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, message);
         fragment.setArguments(args);

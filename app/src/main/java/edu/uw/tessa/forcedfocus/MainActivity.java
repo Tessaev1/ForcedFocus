@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTimeUp;
     Button btnStart;
     CountDownTimer countDownTimer;
-    SendSMS sendSMS;
     int milisUntilDone = 0;
     int startTime;
     boolean timerIsTicking;
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle("");
-//        getActionBar().setDisplayShowTitleEnabled(false);
         setSupportActionBar(myToolbar);
 
         if (!this.isLoggedIn()) {
@@ -59,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
 //        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
-        sendSMS = new SendSMS(MainActivity.this, MainActivity.this);
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
         tvMilliSecond = (TextView) findViewById(R.id.tvMilliSecond);
