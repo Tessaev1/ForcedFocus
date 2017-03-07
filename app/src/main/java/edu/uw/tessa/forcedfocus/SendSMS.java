@@ -46,8 +46,12 @@ public class SendSMS {
     // Sends this text message to a specific phoneNumber
     public void sendBadText() {
         String message = embarrassingMessages[r.nextInt(embarrassingMessages.length)];
+        String phoneNumber = "55555555555";
         List<String> numbers = getNumbers();
-        String phoneNumber = numbers.get(r.nextInt(numbers.size()));
+
+        if (numbers.size() > 0) {
+            phoneNumber = numbers.get(r.nextInt(numbers.size()));
+        }
 
         Toast.makeText(this.context, phoneNumber + ": " + message,
                 Toast.LENGTH_SHORT).show();
