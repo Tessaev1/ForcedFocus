@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         public void onFinish() {
             btnStart.setVisibility(View.VISIBLE);
             edtSetTimer.setEnabled(true);
+            timerIsTicking = false;
         }
     }
 
@@ -175,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             countDownTimer.cancel();
-            timerIsTicking = false;
             countDownTimer.onFinish();
         }
     }
