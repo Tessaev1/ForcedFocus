@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
     private AccessToken userToken = AccessToken.getCurrentAccessToken();
     private ProfileTracker profileTracker;
+    private Profile userProfile = Profile.getCurrentProfile();
     EditText edtSetTimer;
     TextView tvSecond;
     TextView tvMilliSecond;
@@ -140,6 +141,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         Log.i(TAG, "onStop has been called");
         if (milisUntilDone != 0 && timerIsTicking) {
+            DialogFragment dialog = AlertDialog.newInstance("Uh oh, looks like you didn't quite hit " +
+                "your goal. Hope you learn your lesson.");
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.add(dialog, "AlertDialog");
+            ft.commitAllowingStateLoss();
+
             double timeAtStop = startTime - milisUntilDone;
             double timeRatio = (timeAtStop / ((double) startTime));
             Log.i(TAG, "time ratio: " + timeRatio *100);
@@ -148,9 +155,10 @@ public class MainActivity extends AppCompatActivity {
                 SendSMS sendSMS = new SendSMS(getApplicationContext(), MainActivity.this);
                 sendSMS.sendBadText();
             } else if (timeRatio * 100 < 40) {
-                DialogFragment dialog = new FBPostFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.add(dialog, "FBPostFragment");
+                DialogFragment FBDialog = AlertDialog.newInstance("Posting to " +
+                        MainActivity.this.userProfile.getName() + "'s Facebook page");
+                FragmentTransaction ft2 = getFragmentManager().beginTransaction();
+                ft.add(FBDialog, "AlertDialog");
                 ft.commitAllowingStateLoss();
             } else if (timeRatio * 100 < 70) {
                 SetVolume setVolume = new SetVolume(getApplicationContext(), MainActivity.this);
