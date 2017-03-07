@@ -12,12 +12,24 @@
     tools:context="edu.uw.tessa.forcedfocus.PreferencesActivity">
 
     <TextView
-        android:text="Preferences"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/preferencesTitle"
-        android:textSize="30dp"
-        android:layout_weight="0.07" />
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:text="Preferences"
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/permissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="Current Facebook Permissions" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="381dp" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
