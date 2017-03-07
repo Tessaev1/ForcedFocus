@@ -1,9 +1,12 @@
 package edu.uw.tessa.forcedfocus;
 
+import android.Manifest;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.CountDownTimer;
 import android.app.FragmentTransaction;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         };
         this.profileTracker.startTracking();
 
-//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
         sendSMS = new SendSMS(MainActivity.this, MainActivity.this);
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
@@ -204,4 +207,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
         startActivity(intent);
     }
+
 }
