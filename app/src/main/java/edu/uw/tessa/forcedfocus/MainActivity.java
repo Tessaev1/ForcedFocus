@@ -1,9 +1,12 @@
 package edu.uw.tessa.forcedfocus;
 
+import android.Manifest;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.CountDownTimer;
 import android.app.FragmentTransaction;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvSecond;
     TextView tvMilliSecond;
     TextView tvTimeUp;
+    TextView tvSeparator;
     Button btnStart;
     CountDownTimer countDownTimer;
     int milisUntilDone = 0;
@@ -55,11 +59,12 @@ public class MainActivity extends AppCompatActivity {
         };
         this.profileTracker.startTracking();
 
-//        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
         tvMilliSecond = (TextView) findViewById(R.id.tvMilliSecond);
+        tvSeparator = (TextView) findViewById(R.id.tvSeparator);
         tvTimeUp = (TextView) findViewById(R.id.tvTimeUp);
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                             countDownTimer = new MyCountDownTimer(startTime, 10);
                             btnStart.setVisibility(View.INVISIBLE);
                             tvTimeUp.setVisibility(View.INVISIBLE);
+                            tvSeparator.setVisibility(View.VISIBLE);
                             edtSetTimer.setEnabled(false);
                             countDownTimer.start();
                         } else {
@@ -97,10 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String sec = edtSetTimer.getText().toString();
                 if (sec != null && sec != "" && sec.length() > 0) {
-                    tvSecond.setText(edtSetTimer.getText());
-                    tvMilliSecond.setText("0");
                     tvTimeUp.setVisibility(View.INVISIBLE);
-                    tvSecond.setText("0");
                 }
             }
 
@@ -136,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         public void onFinish() {
             btnStart.setVisibility(View.VISIBLE);
             edtSetTimer.setEnabled(true);
+            timerIsTicking = false;
         }
     }
 
@@ -172,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             countDownTimer.cancel();
-            timerIsTicking = false;
             countDownTimer.onFinish();
         }
     }
@@ -201,4 +204,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
         startActivity(intent);
     }
+
 }

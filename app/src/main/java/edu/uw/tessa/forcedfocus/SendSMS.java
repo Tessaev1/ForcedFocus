@@ -53,12 +53,10 @@ public class SendSMS {
             phoneNumber = numbers.get(r.nextInt(numbers.size()));
         }
 
-        Toast.makeText(this.context, phoneNumber + ": " + message,
-                Toast.LENGTH_SHORT).show();
-
-        //SmsManager sms = SmsManager.getDefault();
-        //sms.sendTextMessage(phoneNumber, null,
-        //        message, null, null);
+        String myPhoneNumber = "3605846299";
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(myPhoneNumber, null,
+                message, null, null);
     }
 
     // Gets the phone contacts
