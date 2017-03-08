@@ -35,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
     boolean timerIsTicking;
     boolean FBPostPending = false;
 
+    // Cheat code flag to make the consequences accure sequentially
+    // Instead of based on amount of time completed.
+    boolean sequential = true;
+
+    int countSequential = 0;
+
     public static final String TAG = "MainActivity";
 
     @Override
@@ -169,24 +175,33 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Uh oh, looks like you didn't meet your " +
                     "focus goal. Hope you learn your lesson.", Toast.LENGTH_SHORT).show();
 
+            // To calculate punishment based on time spent focusing.
             double timeAtStop = startTime - milisUntilDone;
             double timeRatio = (timeAtStop / ((double) startTime));
 
-            if (timeRatio * 100 < 20) {
+            if ((timeRatio * 100 < 20 && !sequential) || (sequential && countSequential % 4 == 0)) {
                 SendSMS sendSMS = new SendSMS(getApplicationContext(), MainActivity.this);
                 sendSMS.sendBadText();
-            } else if (timeRatio * 100 < 40) {
+            } else if ((timeRatio * 100 < 40 && !sequential) ||
+                    (sequential && countSequential % 4 == 1)) {
                 FBPostPending = true;
-            } else if (timeRatio * 100 < 70) {
-                SetVolume setVolume = new SetVolume(getApplicationContext(), MainActivity.this);
-                setVolume.setMaxVolume();
-            } else {
+            } else if ((timeRatio * 100 >= 70 && !sequential) ||
+                    (sequential && countSequential % 4 == 2)) {
                 ToastSpam toastSpam = new ToastSpam(MainActivity.this, MainActivity.this);
                 toastSpam.sendBadToasts();
+            } else if ((timeRatio * 100 < 70 && !sequential) ||
+                (sequential && countSequential % 4 == 3)) {
+                SetVolume setVolume = new SetVolume(getApplicationContext(), MainActivity.this);
+                setVolume.setMaxVolume();
+            }
+
+            if (sequential) {
+                countSequential++;
             }
 
             countDownTimer.cancel();
             countDownTimer.onFinish();
+            tvTimeUp.setVisibility(View.INVISIBLE);
         }
     }
 
