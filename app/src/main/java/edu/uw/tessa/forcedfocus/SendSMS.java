@@ -9,12 +9,13 @@ import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.util.Log;
-import android.widget.Toast;
 import android.telephony.SmsManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * Created by Tessa on 2/25/17.
@@ -28,8 +29,8 @@ public class SendSMS {
 
 
     public SendSMS(Context context, Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && activity.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            activity.requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 100);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && activity.checkSelfPermission(READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            activity.requestPermissions(new String[]{READ_CONTACTS}, 100);
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         }
         r = new Random();
@@ -37,7 +38,6 @@ public class SendSMS {
         this.activity = activity;
         embarrassingMessages = new String[] {
                 "I really such at focusing on my work!!! LOL :D",
-                "I'm pregnant!!! :O",
                 "F*** you!!",
                 "I suck at focusing... "
             };
@@ -46,17 +46,15 @@ public class SendSMS {
     // Sends this text message to a specific phoneNumber
     public void sendBadText() {
         String message = embarrassingMessages[r.nextInt(embarrassingMessages.length)];
-        String phoneNumber = "55555555555";
         List<String> numbers = getNumbers();
 
         if (numbers.size() > 0) {
-            phoneNumber = numbers.get(r.nextInt(numbers.size()));
+            String phoneNumber = numbers.get(r.nextInt(numbers.size()));
         }
 
         String myPhoneNumber = "3605846299";
         SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(myPhoneNumber, null,
-                message, null, null);
+        sms.sendTextMessage(myPhoneNumber, null, message, null, null);
     }
 
     // Gets the phone contacts
