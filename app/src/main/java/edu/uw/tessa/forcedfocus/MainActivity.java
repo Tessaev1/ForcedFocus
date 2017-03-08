@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                             btnStart.setVisibility(View.INVISIBLE);
                             tvTimeUp.setVisibility(View.INVISIBLE);
                             tvSeparator.setVisibility(View.VISIBLE);
+                            tvTimeUp.setVisibility(View.INVISIBLE);
                             edtSetTimer.setEnabled(false);
                             countDownTimer.start();
                         } else {
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         public void onFinish() {
             btnStart.setVisibility(View.VISIBLE);
             edtSetTimer.setEnabled(true);
+            tvTimeUp.setVisibility(View.VISIBLE);
             timerIsTicking = false;
         }
     }
