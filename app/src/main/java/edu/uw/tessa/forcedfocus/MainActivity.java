@@ -2,7 +2,6 @@ package edu.uw.tessa.forcedfocus;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.CountDownTimer;
@@ -19,8 +18,6 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 
 import java.util.concurrent.TimeUnit;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MainActivity extends AppCompatActivity {
     private AccessToken userToken = AccessToken.getCurrentAccessToken();
@@ -168,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onStop has been called");
         if (milisUntilDone != 0 && timerIsTicking) {
             Toast.makeText(this, "Uh oh, looks like you didn't meet your " +
-                    "focus goal. Hope you learn your lesson.", Toast.LENGTH_LONG).show();
+                    "focus goal. Hope you learn your lesson.", Toast.LENGTH_SHORT).show();
 
             double timeAtStop = startTime - milisUntilDone;
             double timeRatio = (timeAtStop / ((double) startTime));
