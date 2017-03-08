@@ -1,11 +1,10 @@
 package edu.uw.tessa.forcedfocus;
 
 import android.Manifest;
-import android.app.DialogFragment;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.CountDownTimer;
-import android.app.FragmentTransaction;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
     TextView tvSeparator;
     Button btnStart;
     CountDownTimer countDownTimer;
-    SendSMS sendSMS;
     int milisUntilDone = 0;
     int startTime;
     boolean timerIsTicking;
+    boolean FBPostPending = false;
 
     public static final String TAG = "MainActivity";
 
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle("");
-//        getActionBar().setDisplayShowTitleEnabled(false);
         setSupportActionBar(myToolbar);
 
         if (!this.isLoggedIn()) {
@@ -63,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
-        sendSMS = new SendSMS(MainActivity.this, MainActivity.this);
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
         tvSecond = (TextView) findViewById(R.id.tvSecond);
         tvMilliSecond = (TextView) findViewById(R.id.tvMilliSecond);
@@ -149,29 +146,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (FBPostPending) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage("Posting to " + this.userProfile.getName() + "'s Facebook page")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
+        }
+        FBPostPending = false;
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         Log.i(TAG, "onStop has been called");
         if (milisUntilDone != 0 && timerIsTicking) {
-            DialogFragment dialog = AlertDialog.newInstance("Uh oh, looks like you didn't quite hit " +
-                "your goal. Hope you learn your lesson.");
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.add(dialog, "AlertDialog");
-            ft.commitAllowingStateLoss();
+            Toast.makeText(this, "Uh oh, looks like you didn't meet your " +
+                    "focus goal. Hope you learn your lesson.", Toast.LENGTH_SHORT).show();
 
             double timeAtStop = startTime - milisUntilDone;
             double timeRatio = (timeAtStop / ((double) startTime));
-            Log.i(TAG, "time ratio: " + timeRatio *100);
 
             if (timeRatio * 100 < 20) {
                 SendSMS sendSMS = new SendSMS(getApplicationContext(), MainActivity.this);
                 sendSMS.sendBadText();
             } else if (timeRatio * 100 < 40) {
-                DialogFragment FBDialog = AlertDialog.newInstance("Posting to " +
-                        MainActivity.this.userProfile.getName() + "'s Facebook page");
-                FragmentTransaction ft2 = getFragmentManager().beginTransaction();
-                ft.add(FBDialog, "AlertDialog");
-                ft.commitAllowingStateLoss();
+                FBPostPending = true;
             } else if (timeRatio * 100 < 70) {
                 SetVolume setVolume = new SetVolume(getApplicationContext(), MainActivity.this);
                 setVolume.setMaxVolume();
@@ -194,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
         }
         if (enableButtons && profile != null) {
             Log.e("Access Token", AccessToken.getCurrentAccessToken().toString());
-            Log.e("TabSocial", profile.getName());
         }
     }
 
