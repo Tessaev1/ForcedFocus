@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         };
         this.profileTracker.startTracking();
 
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
 
         edtSetTimer = (EditText) findViewById(R.id.edtSetTimer);
